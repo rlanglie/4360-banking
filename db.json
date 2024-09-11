@@ -1,0 +1,56 @@
+{
+    "users": {
+        "default": {
+            "username": "default",
+            "password": "password",
+            "login_attempts": {
+            },
+            "accounts": {
+                "checkings0": {
+                    "name": "checkings0",
+                    "balance": 60.0,
+                    "history": {
+                        "tx_20240910202200182768": {
+                            "amount": 50.0,
+                            "sender": "default",
+                            "receiver": "justin",
+                            "timestamp": "2024-09-10 20:22:00"
+                        },
+                        "tx_20240910202234656541": {
+                            "amount": 30.0,
+                            "sender": "justin",
+                            "receiver": "default",
+                            "timestamp": "2024-09-10 20:22:34"
+                        }
+                    }
+                }
+            }
+        },
+        "justin": {
+            "username": "justin",
+            "password": "cox",
+            "login_attempts": {
+            },
+            "accounts": {
+                "checkings0": {
+                    "name": "checkings0",
+                    "balance": 40.0,
+                    "history": {
+                        "tx_20240910202200182768": {
+                            "amount": 50.0,
+                            "sender": "default",
+                            "receiver": "justin",
+                            "timestamp": "2024-09-10 20:22:00"
+                        },
+                        "tx_20240910202234656541": {
+                            "amount": 30.0,
+                            "sender": "justin",
+                            "receiver": "default",
+                            "timestamp": "2024-09-10 20:22:34"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
