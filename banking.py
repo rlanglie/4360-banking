@@ -1,5 +1,12 @@
-import json, sys
+import json, sys, os, platform
 from datetime import datetime
+
+def clear_screen():
+        if platform.system() == 'Windows':
+            os.system('cls')
+        else:
+            os.system('clear')
+    
 
 def update_database(new_db):
     with open('db.json', 'w') as file:
@@ -38,7 +45,42 @@ def log_transaction(db, amt, sender, receiver):
 
     return db
 
-def transferBetweenAccounts(amt, tx, rx):
+def log_wd(db, amt, receiver):
+
+    if amt > 0:
+        wd_type = "deposit"
+    elif amt < 0:
+        wd_type = "withdraw"
+
+    transaction = {
+        "amount": amt,
+        "receiver": receiver,
+        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "type": wd_type
+    }
+
+    # Fetch the receiver's accounts
+    receiver_accounts = db["users"].get(receiver, {}).get("accounts", {})
+
+    # Assuming you want to pick the first account available
+    receiver_first_account = next(iter(receiver_accounts.values()), None)
+
+    # Check if the account is available
+    if receiver_first_account is None:
+        print(f"Error: Receiver {receiver} has no accounts.")
+        return db
+
+    # Generate a unique transaction ID using the current timestamp
+    transaction_id = f"tx_{datetime.now().strftime('%Y%m%d%H%M%S%f')}"
+
+    # Append the transaction to the receiver's history
+    receiver_first_account.setdefault("history", {})[transaction_id] = transaction
+
+    print(f"{amt} logged for {receiver}.")
+    return db
+
+
+def tf_between_accounts(amt, tx, rx):
     """Transfer amount between two accounts."""
     try:
         amt = float(amt)  # Convert amount to float
@@ -46,6 +88,10 @@ def transferBetweenAccounts(amt, tx, rx):
         print("Invalid amount. Please enter a numerical value.")
         return
     
+    if rx == tx:
+        print("Cannot transfer to self")
+        return
+
     if amt <= 0:
         print("Amount must be greater than zero.")
         return
@@ -55,8 +101,8 @@ def transferBetweenAccounts(amt, tx, rx):
         print("Invalid sender or receiver.")
         return
     
-    user_tx = db["users"][tx]
-    user_rx = db["users"][rx]
+    user_tx = db.get("users", {}).get(tx, {})
+    user_rx = db.get("users", {}).get(rx, {})
 
     # Assuming there's only one account per user for simplicity
     tx_account = list(user_tx["accounts"].values())[0]
@@ -75,15 +121,78 @@ def transferBetweenAccounts(amt, tx, rx):
     # Save the updated database
     update_database(db)
 
-    print(f"Transferred ${amt} from {tx} to {rx} successfully.")
+    print(f"Transferred ${amt} from {tx} to {rx} successfully.\n")
+
+def deposit(amt, rx):
+    try:
+        amt = float(amt)  # Convert amount to float
+    except ValueError:
+        print("Invalid amount. Please enter a numerical value.")
+        return
+    
+    if amt <= 0:
+        print("Amount must be greater than zero.")
+        return
+
+    db = load_database()  # Load the database
+
+    if rx not in db["users"]:
+        print("Invalid receiver.")
+        return
+
+    user_rx = db["users"][rx]
+    rx_account = list(user_rx["accounts"].values())[0]
+
+    rx_account["balance"] += amt
+
+    db = log_wd(db, amt, rx)
+
+    # Save the updated database
+    update_database(db)
+
+    print(f"Deposited ${amt} to {rx} successfully.\n")
+
+def withdraw(amt, rx):
+    try:
+        amt = float(amt)  # Convert amount to float
+    except ValueError:
+        print("Invalid amount. Please enter a numerical value.")
+        return
+    
+    if amt <= 0:
+        print("Amount must be greater than zero.")
+        return
+
+    db = load_database()  # Load the database
+
+    if rx not in db["users"]:
+        print("Invalid receiver.")
+        return
+
+    user_rx = db["users"][rx]
+    rx_account = list(user_rx["accounts"].values())[0]
+
+    rx_account["balance"] -= amt
+
+    db = log_wd(db, -amt, rx)
+
+    # Save the updated database
+    update_database(db)
+
+    print(f"Deposited ${amt} to {rx} successfully.\n")
+
 
 quit_state = -1
 run_state = 0
 user_state = 1
 
 def action_menu(user):
-    option = input("Which action would you like to perform?\n")
+    clear_screen()
+
+    option = input("Which action would you like to perform?\ntransfer, deposit, withdraw, logout, quit\n")
+    clear_screen()
     if option == "quit":
+        clear_screen()
         return quit_state  
 
     if option == "logout":
@@ -92,7 +201,17 @@ def action_menu(user):
     if option == "transfer":
         amt = input("How mouch would you like to transfer?\n")
         rx = input("Who do you want to send it to?\n")
-        transferBetweenAccounts(amt, user['username'], rx)
+        print("\n")
+        tf_between_accounts(amt, user['username'], rx)
+
+    if option == "deposit":
+        amt = input("How much would you like to deposit?\n")
+        deposit(amt, user['username'])
+
+    if option == "withdraw":
+        amt = input("How much would you like to withdraw?\n")
+        withdraw(amt, user['username'])
+    input("Press enter to proceed...")
     return user_state
     
 def display_user(user):
@@ -143,7 +262,7 @@ def get_user(username, password):
     if username not in users:
         return -1
     
-    user = users[username]
+    user = users.get(username, [])
     login_attempts = user.get("login_attempts", [])
 
     # check user login attempts
@@ -155,15 +274,17 @@ def get_user(username, password):
         last_attempt_time = attempt_times[-1]
         current_time = datetime.now()
         
-        # Check if a minute has passed since the last attempt
+        # Check if enough time has passed since the last attempt
         if (current_time - last_attempt_time).total_seconds() < 20 * max(3, len(login_attempts)):
             return -2
-        
 
     # check if password is correct
     if password != user["password"]:
         log_failed_attempt(user)
         return -1
+
+    user["login_attempts"] = 0
+
     return user
 
 def login_handling():
@@ -194,6 +315,7 @@ def main():
     state = run_state
 
     while state == run_state:
+        clear_screen()
         print("Welcome to BSU-PAY: Bemidji State University's unofficial banking app!!!1!\n\n")
         input("Press enter to proceed...\n")
 

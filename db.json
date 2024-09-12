@@ -4,23 +4,50 @@
             "username": "default",
             "password": "password",
             "login_attempts": {
+                "0": "2024-09-11 20:49:49",
+                "1": "2024-09-11 20:49:52",
+                "2": "2024-09-11 20:49:55"
             },
             "accounts": {
                 "checkings0": {
                     "name": "checkings0",
-                    "balance": 60.0,
+                    "balance": 300.0,
                     "history": {
-                        "tx_20240910202200182768": {
-                            "amount": 50.0,
+                        "tx_20240911211453747060": {
+                            "amount": 540.0,
+                            "receiver": "default",
+                            "timestamp": "2024-09-11 21:14:53",
+                            "type": "deposit"
+                        },
+                        "tx_20240911211533061340": {
+                            "amount": 300.0,
                             "sender": "default",
                             "receiver": "justin",
-                            "timestamp": "2024-09-10 20:22:00"
+                            "timestamp": "2024-09-11 21:15:33"
                         },
-                        "tx_20240910202234656541": {
-                            "amount": 30.0,
-                            "sender": "justin",
-                            "receiver": "default",
-                            "timestamp": "2024-09-10 20:22:34"
+                        "tx_20240911212017790136": {
+                            "amount": 100.0,
+                            "sender": "default",
+                            "receiver": "justin",
+                            "timestamp": "2024-09-11 21:20:17"
+                        },
+                        "tx_20240911212251691411": {
+                            "amount": 100.0,
+                            "sender": "default",
+                            "receiver": "justin",
+                            "timestamp": "2024-09-11 21:22:51"
+                        },
+                        "tx_20240911214055515663": {
+                            "amount": 100.0,
+                            "sender": "default",
+                            "receiver": "justin",
+                            "timestamp": "2024-09-11 21:40:55"
+                        },
+                        "tx_20240911214130695630": {
+                            "amount": 100.0,
+                            "sender": "default",
+                            "receiver": "justin",
+                            "timestamp": "2024-09-11 21:41:30"
                         }
                     }
                 }
@@ -29,24 +56,47 @@
         "justin": {
             "username": "justin",
             "password": "cox",
-            "login_attempts": {
-            },
+            "login_attempts": {},
             "accounts": {
                 "checkings0": {
                     "name": "checkings0",
-                    "balance": 40.0,
+                    "balance": 800.0,
                     "history": {
-                        "tx_20240910202200182768": {
-                            "amount": 50.0,
+                        "tx_20240911211533061340": {
+                            "amount": 300.0,
                             "sender": "default",
                             "receiver": "justin",
-                            "timestamp": "2024-09-10 20:22:00"
+                            "timestamp": "2024-09-11 21:15:33"
                         },
-                        "tx_20240910202234656541": {
-                            "amount": 30.0,
-                            "sender": "justin",
-                            "receiver": "default",
-                            "timestamp": "2024-09-10 20:22:34"
+                        "tx_20240911212017790136": {
+                            "amount": 100.0,
+                            "sender": "default",
+                            "receiver": "justin",
+                            "timestamp": "2024-09-11 21:20:17"
+                        },
+                        "tx_20240911212045460512": {
+                            "amount": -440.0,
+                            "receiver": "justin",
+                            "timestamp": "2024-09-11 21:20:45",
+                            "type": "withdraw"
+                        },
+                        "tx_20240911212251691411": {
+                            "amount": 100.0,
+                            "sender": "default",
+                            "receiver": "justin",
+                            "timestamp": "2024-09-11 21:22:51"
+                        },
+                        "tx_20240911214055515663": {
+                            "amount": 100.0,
+                            "sender": "default",
+                            "receiver": "justin",
+                            "timestamp": "2024-09-11 21:40:55"
+                        },
+                        "tx_20240911214130695630": {
+                            "amount": 100.0,
+                            "sender": "default",
+                            "receiver": "justin",
+                            "timestamp": "2024-09-11 21:41:30"
                         }
                     }
                 }
